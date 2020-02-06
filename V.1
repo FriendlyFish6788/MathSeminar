@@ -1,0 +1,19 @@
+points = [(1,2), (3,4), (5,6)]
+original = 0
+margin = original
+upperLim = 10
+outgraph = []
+#def marginGen(x):
+
+for point in points:
+    while margin < upperLim:
+        #marginVal = marginGen(margin)
+        marginVal = []
+        if point in marginVal:
+            outgraph.append(point)
+            break
+        else:
+            margin += 1
+    margin = original
+
+print(outgraph)
