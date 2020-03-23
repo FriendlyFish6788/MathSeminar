@@ -1,6 +1,12 @@
 import math
-a = 0
-b = 0
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import xlrd
+loc = ('C:/Users/S529725/Desktop/TheData.xlsx')
+wb = xlrd.open_workbook(loc)
+sheet = wb.sheet_by_index(0)
+print(sheet.cell_value(5,3))
+
 
 #ask for margin, lines with bounds, circles, scale,
 def dist(t,a,b):
@@ -11,16 +17,73 @@ def dist(t,a,b):
     fin = math.sqrt(c+d)
     return fin
 
+
+a = 0
+b = 0
+circle = []
+lines = []
+initial = 'Y'
+initial = str(input("Do you have another line or circle? (Y/N) "))
+while initial == 'Y':
+    request = (str(input("Is the equation a line or a circle? (line/circle) ")))
+    if request == "circle":
+        print("circle")
+    elif request == "line":
+        print("line")
+    else:
+        request = (str(input("Oops! Try Again: line or circle? (line/circle) ")))
+    initial = str(input("Do you have another line or circle? (Y/N) "))
+
+
 test = (1,20)
 margin = 3
 radius = 3
 print(dist(test,a,b))
 output = []
 points = [(1,2), (3,4), (4,5), (1,20), (2,5), (10,100)]
+x = []
+y= []
 
-for point in points:
-    if dist(point,a,b) <= (radius + margin):
-        if dist(point,a,b) >= (radius - margin):
-            output.append(point)
+poi = 49
 
+while poi < 91:
+    cell = sheet.cell_value(poi,3)
+    if cell == "<null>":
+        poi +=1
+        continue
+    comma = cell.index(",")
+    print(comma)
+    print(cell)
+    xVal = cell[1:comma]
+    print(cell[1:comma])
+    pointLen = len(cell)
+    yVal = cell[comma + 2:pointLen - 4]
+    print(yVal)
+    xVal = int(float(xVal))
+    yVal = int(float(yVal))
+    x.append(xVal)
+    y.append(yVal)
+    poi += 1
+
+#for point in points:
+#    if dist(point,a,b) <= (radius + margin):
+#        if dist(point,a,b) >= (radius - margin):
+#            x.append(point[0])
+#            y.append(point[1])
+#            output.append(point)
+
+#im = plt.imread('C:/Users/S529725/Desktop/stinkbug.png')
+#implot = plt.imshow(im)
+
+# put a blue dot at (10, 20)
+#plt.scatter([10], [20])
+
+# put a red dot, size 40, at 2 locations:
+#plt.scatter(x=[30, 40], y=[50, 60], c='r', s=40)
+
+#plt.show()
 print(output)
+area = 3.14*3
+plt.scatter(x,y, s = area)
+
+plt.show()
