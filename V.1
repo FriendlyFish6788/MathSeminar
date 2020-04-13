@@ -1,17 +1,11 @@
 import math
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 import xlrd
 loc = ('C:/Users/S529725/Desktop/TheData.xlsx')
 wb = xlrd.open_workbook(loc)
 sheet = wb.sheet_by_index(0)
-#print(sheet.cell_value(5,3))
 
-margin = .25
+margin = 2
 
-
-
-#ask for margin, lines with bounds, circles, scale,
 def dist(t,a,b):
     x = t[0]
     y = t[1]
@@ -20,11 +14,6 @@ def dist(t,a,b):
     fin = math.sqrt(c+d)
     return fin
 
-# Python3 implementation of the approach
-from math import sqrt
-
-# Function to find the circle on
-# which the given three points lie
 def findRadius(x1, y1, x2, y2, x3, y3) :
     x12 = x1 - x2;
     x13 = x1 - x3;
@@ -51,12 +40,15 @@ def findRadius(x1, y1, x2, y2, x3, y3) :
 
     sx21 = pow(x2, 2) - pow(x1, 2);
     sy21 = pow(y2, 2) - pow(y1, 2);
-
+    if (2 * ((y31) * (x12)) - ((y21) * (x13))) == 0:
+        return 0
+    if (2 * ((x31) * (y12) - (x21) * (y13))) == 0:
+        return 0
     f = (((sx13) * (x12) + (sy13) *
           (x12) + (sx21) * (x13) +
           (sy21) * (x13)) // (2 *
           ((y31) * (x12)) - ((y21) * (x13))));
-
+    #print((2 * ((x31) * (y12) - (x21) * (y13))))
     g = (((sx13) * (y12) + (sy13) * (y12) +
           (sx21) * (y13) + (sy21) * (y13)) //
           (2 * ((x31) * (y12) - (x21) * (y13))));
@@ -81,8 +73,6 @@ def findRadius(x1, y1, x2, y2, x3, y3) :
 # Python3 implementation of the approach
 from math import sqrt
 
-# Function to find the circle on
-# which the given three points lie
 def findCircle(x1, y1, x2, y2, x3, y3) :
     x12 = x1 - x2;
     x13 = x1 - x3;
@@ -104,7 +94,10 @@ def findCircle(x1, y1, x2, y2, x3, y3) :
 
     sx21 = pow(x2, 2) - pow(x1, 2);
     sy21 = pow(y2, 2) - pow(y1, 2);
-
+    if ((y31) * (x12)) - ((y21) * (x13)) == 0:
+        return 0
+    if ((x31) * (y12) - (x21) * (y13)) == 0:
+        return 0
     f = (((sx13) * (x12) + (sy13) *
           (x12) + (sx21) * (x13) +
           (sy21) * (x13)) // (2 *
@@ -126,112 +119,98 @@ def findCircle(x1, y1, x2, y2, x3, y3) :
 
     # r is the radius
     r = round(sqrt(sqr_of_r), 5);
+    d = r*2
+    Center = (h,k)
+    Radius = r
+    Diameter = d
+    return Center, Radius, Diameter
+    #print("Centre = (", h, ", ", k, ")");
+    #print("Radius = ", r);
+    #print("Diameter = ", d)
 
-    print("Centre = (", h, ", ", k, ")");
-    print("Radius = ", r);
-
-a = 0
-b = 0
 circle = []
 lines = []
-initial = 'Y'
-#initial = str(input("Do you have another line or circle? (Y/N) "))
-#while initial == 'Y':
-#    request = (str(input("Is the equation a line or a circle? (line/circle) ")))
-#    if request == "circle":
-#        print("circle")
-#    elif request == "line":
-#        print("line")
-#    else:
-#        request = (str(input("Oops! Try Again: line or circle? (line/circle) ")))
-#    initial = str(input("Do you have another line or circle? (Y/N) "))
-
-
-
-test = (1,20)
-margin = 3
-radius = 3
-#print(dist(test,a,b))
-output = []
-points = [(1,2), (3,4), (4,5), (1,20), (2,5), (10,100)]
 x = []
 y= []
-
 poi = 49
-
-while poi < 91:
+countList =[]
+#Cut 1, etc
+while poi < 14473:
     cell = sheet.cell_value(poi,3)
     if cell == "<null>":
-        poi +=1
-        continue
-    comma = cell.index(",")
-    #print(comma)
-    #print(cell)
-    xVal = cell[1:comma]
-    #print(cell[1:comma])
-    pointLen = len(cell)
-    yVal = cell[comma + 2:pointLen - 4]
-    #print(yVal)
-    xVal = int(float(xVal))
-    yVal = int(float(yVal))
-    x.append(xVal)
-    y.append(yVal)
-    poi += 1
-
+        counter = len(x)
+        countList.append(counter)
+        print("Continue", counter)
+        poi += 1
+    else:
+        comma = cell.index(",")
+        #print(comma)
+        #print(cell)
+        xVal = cell[1:comma]
+        #print(cell[1:comma])
+        pointLen = len(cell)
+        yVal = cell[comma + 2:pointLen - 4]
+        #print(yVal)
+        xVal = int(float(xVal))
+        yVal = int(float(yVal))
+        x.append(xVal)
+        y.append(yVal)
+        poi += 1
+print("done")
+print(countList)
+cut = 1
 l = 0
 m = 1
 n = 2
 
-p = len(x)
-#print(p)
+#Need something to do the subtraction between
+for ll in countList:
+    m = l + 1
+    n = l + 2
+    #p = len(x)
+    p = ll
+    CenterSmall = []
+    CenterLarge = []
 
-
-
-while l < p:
-    while m < (p-1):
-        while n < (p-2):
-            #print(x[l], y[l],x[m], y[m],x[n], y[n])
-            if x[l] == x[m]:
-                if y[l] == y[m]:
-                    break
-            if x[n] == x[m]:
-               if y[n] == y[m]:
-                   break
-            if x[l] == x[n]:
-                if y[l] == y[n]:
-                    break
-            diam = findRadius(x[l], y[l], x[m], y[m], x[n], y[n])*2
-            if diam >= 8.625 - margin:
-                if diam >= 8.625+margin:
-                    if diam <= 16 + margin:
-                        if diam >= 16 - margin:
-                            findCircle(x[l], y[l], x[m], y[m], x[n], y[n])
-                else:
-                    findCircle(x[l], y[l], x[m], y[m], x[n], y[n])
-            n += 1
-        m += 1
-    l += 1
-
-
-#for point in points:
-#    if dist(point,a,b) <= (radius + margin):
-#        if dist(point,a,b) >= (radius - margin):
-#            x.append(point[0])
-#            y.append(point[1])
-#            output.append(point)
-
-#im = plt.imread('C:/Users/S529725/Desktop/stinkbug.png')
-#implot = plt.imshow(im)
-
-# put a blue dot at (10, 20)
-#plt.scatter([10], [20])
-
-# put a red dot, size 40, at 2 locations:
-#plt.scatter(x=[30, 40], y=[50, 60], c='r', s=40)
-
-#plt.show()
-#print(output)
-area = 3.14*3
-#plt.scatter(x,y, s = area)
-
-#plt.show()
+    print("Cut Number ", cut)
+    while l < p:
+        while m < (p-1):
+            while n < (p-2):
+                #print(x[l], y[l],x[m], y[m],x[n], y[n])
+                if x[l] == x[m]:
+                    if y[l] == y[m]:
+                        break
+                if x[n] == x[m]:
+                   if y[n] == y[m]:
+                       break
+                if x[l] == x[n]:
+                    if y[l] == y[n]:
+                        break
+                #print(x[l], y[l], x[m], y[m], x[n], y[n])
+                diam = findRadius(x[l], y[l], x[m], y[m], x[n], y[n])*2
+                Circ = findCircle(x[l], y[l], x[m], y[m], x[n], y[n])
+                #print(Circ)
+                if diam >= (8.625 - margin):
+                    if diam >= (8.625+margin):
+                        if diam <= (16 + margin):
+                            if diam >= (16 - margin):
+                                #pre = len(Circ)
+                                #CenterLarge.append(Circ[0])
+                                #Circ = tuple(dict.fromkeys(Circ))
+                                #if len(Circ) == pre:
+                                #    n+=1
+                                #    break
+                                print(findCircle(x[l], y[l], x[m], y[m], x[n], y[n]))
+                    else:
+                        #pre = len(Circ)
+                        #CenterSmall.append(Circ[0])
+                        #Circ = tuple(dict.fromkeys(Circ))
+                        #if len(Circ) == pre:
+                        #    n+1
+                        #    break
+                        print(findCircle(x[l], y[l], x[m], y[m], x[n], y[n]))
+                n += 1
+            m += 1
+        l += 1
+    l = p
+    cut += 1
